@@ -5,7 +5,31 @@
     <title>Admin Dashboard</title>
   </head>
   <body>
-    <h1>Admin Dashboard</h1>
-    <p>Administrative routes live here.</p>
+    <header>
+      <h1>Admin Dashboard</h1>
+      <form action="{{ url_for('admin.logout') }}" method="post">
+        <button type="submit">Log out</button>
+      </form>
+    </header>
+    <section>
+      <h2>Content Management</h2>
+      <ul>
+        <li>
+          <a href="{{ url_for('admin.manage_featured') }}">
+            Featured images ({{ featured_count }})
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('admin.manage_gallery') }}">
+            Gallery images ({{ gallery_count }})
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('admin.view_commissions') }}">
+            Commission submissions ({{ commission_count }})
+          </a>
+        </li>
+      </ul>
+    </section>
   </body>
 </html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Manage Featured Images</title>
+  </head>
+  <body>
+    <header>
+      <h1>Featured Images</h1>
+      <nav>
+        <a href="{{ url_for('admin.dashboard') }}">Back to dashboard</a>
+      </nav>
+    </header>
+
+    <section>
+      <h2>Add featured image</h2>
+      <form action="{{ url_for('admin.add_featured_image') }}" method="post">
+        <label for="title">Title</label>
+        <input id="title" name="title" type="text" required />
+        <label for="filename">Filename</label>
+        <input id="filename" name="filename" type="text" required />
+        <label for="description">Description</label>
+        <textarea id="description" name="description"></textarea>
+        <button type="submit">Add image</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Reorder featured images</h2>
+      <form action="{{ url_for('admin.reorder_featured') }}" method="post">
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Filename</th>
+              <th>Position</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for image in images %}
+              <tr>
+                <td>{{ image.title }}</td>
+                <td>{{ image.filename }}</td>
+                <td>
+                  <input
+                    type="number"
+                    name="position_{{ image.id }}"
+                    value="{{ image.position }}"
+                  />
+                </td>
+                <td>
+                  <button
+                    type="submit"
+                    formaction="{{ url_for('admin.delete_featured_image', image_id=image.id) }}"
+                    formmethod="post"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="4">No featured images yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <button type="submit">Save order</button>
+      </form>
+    </section>
+  </body>
+</html>

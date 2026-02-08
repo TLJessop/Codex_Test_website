@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import check_password_hash, generate_password_hash
 
 db = SQLAlchemy()
 
@@ -16,6 +17,33 @@ class GalleryImage(db.Model):
 
     def __repr__(self):
         return f"<GalleryImage id={self.id} title={self.title!r}>"
+
+
+class FeaturedImage(db.Model):
+    __tablename__ = "featured_images"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    position = db.Column(db.Integer, nullable=False, default=0)
+
+    def __repr__(self):
+        return f"<FeaturedImage id={self.id} title={self.title!r}>"
+
+
+class User(db.Model):
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 
 class CommissionSubmission(db.Model):

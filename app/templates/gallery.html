@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Gallery | Studio North{% endblock %}
+{% block content %}
+  <section class="section">
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Gallery</p>
+          <h1>Selected works</h1>
+        </div>
+        <p class="lead">
+          Tap an artwork to view it larger. Use the escape key to close the
+          modal.
+        </p>
+      </div>
+      {% set artworks = [
+        {"title": "Midnight Botanicals", "label": "Indigo, ink, gold", "color": "#3451a5"},
+        {"title": "Sunlit Caravan", "label": "Warm desert palette", "color": "#d98f4a"},
+        {"title": "Garden Study", "label": "Soft graphite, blush", "color": "#d7a5b6"},
+        {"title": "Cloud Atlas", "label": "Cool mist layers", "color": "#7aa6c2"},
+        {"title": "Harbor Lines", "label": "Charcoal and seafoam", "color": "#4f8c85"},
+        {"title": "Night Bloom", "label": "Violet glow", "color": "#6b4e93"}
+      ] %}
+      <div class="gallery-grid">
+        {% for art in artworks %}
+          {% set svg %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+              <rect width="100%" height="100%" fill="{{ art.color }}"/>
+              <text x="50%" y="50%" font-size="48" fill="#ffffff" text-anchor="middle" dominant-baseline="middle" font-family="Arial, sans-serif">
+                {{ art.title }}
+              </text>
+            </svg>
+          {% endset %}
+          {% set data_url = "data:image/svg+xml;utf8," + svg | trim | urlencode %}
+          <button
+            class="gallery-card"
+            type="button"
+            data-full="{{ data_url }}"
+            data-title="{{ art.title }}"
+            data-caption="{{ art.label }}"
+            aria-haspopup="dialog"
+          >
+            <img src="{{ data_url }}" alt="{{ art.title }} artwork preview" />
+            <span class="gallery-meta">
+              <span>{{ art.title }}</span>
+              <span>{{ art.label }}</span>
+            </span>
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-content" role="document">
+      <button class="modal-close" type="button" aria-label="Close modal" data-close>
+        ✕
+      </button>
+      <img class="modal-image" src="" alt="" />
+      <div class="modal-caption">
+        <h2></h2>
+        <p></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.querySelector(".modal");
+    const modalImage = document.querySelector(".modal-image");
+    const modalTitle = document.querySelector(".modal-caption h2");
+    const modalText = document.querySelector(".modal-caption p");
+    const focusableSelectors = "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])";
+    let lastActiveElement = null;
+
+    const openModal = (card) => {
+      lastActiveElement = document.activeElement;
+      modalImage.src = card.dataset.full;
+      modalImage.alt = card.dataset.title;
+      modalTitle.textContent = card.dataset.title;
+      modalText.textContent = card.dataset.caption;
+      modal.setAttribute("aria-hidden", "false");
+      modal.classList.add("is-open");
+      document.body.classList.add("no-scroll");
+      const focusable = modal.querySelectorAll(focusableSelectors);
+      focusable[0]?.focus();
+    };
+
+    const closeModal = () => {
+      modal.setAttribute("aria-hidden", "true");
+      modal.classList.remove("is-open");
+      document.body.classList.remove("no-scroll");
+      modalImage.src = "";
+      lastActiveElement?.focus();
+    };
+
+    document.querySelectorAll(".gallery-card").forEach((card) => {
+      card.addEventListener("click", () => openModal(card));
+    });
+
+    modal.addEventListener("click", (event) => {
+      if (event.target.matches("[data-close]")) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("is-open")) {
+        closeModal();
+      }
+    });
+
+    modal.addEventListener("keydown", (event) => {
+      if (event.key !== "Tab") {
+        return;
+      }
+      const focusable = modal.querySelectorAll(focusableSelectors);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+  </script>
+{% endblock %}

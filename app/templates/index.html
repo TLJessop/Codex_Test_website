@@ -1,11 +1,63 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Flask App</title>
-  </head>
-  <body>
-    <h1>Welcome to the main site</h1>
-    <p>This is the main blueprint landing page.</p>
-  </body>
-</html>
+{% extends "base.html" %}
+{% block title %}Home | Studio North{% endblock %}
+{% block content %}
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Illustration &amp; visual storytelling</p>
+      <h1>Hand-crafted art for thoughtful brands and collectors.</h1>
+      <p class="lead">
+        Studio North is a calm corner for dreamy editorial work, custom
+        commissions, and boutique prints.
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href="{{ url_for('main.gallery') }}">
+          Explore the gallery
+        </a>
+        <a class="button ghost" href="{{ url_for('main.commissions') }}">
+          Commission details
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid">
+      <article class="card">
+        <h2>Editorial</h2>
+        <p>
+          Whimsical illustrations for magazines, books, and narrative campaigns.
+        </p>
+      </article>
+      <article class="card">
+        <h2>Brand work</h2>
+        <p>
+          Visual systems designed to feel personal, warm, and modern across
+          touchpoints.
+        </p>
+      </article>
+      <article class="card">
+        <h2>Prints</h2>
+        <p>
+          Limited release prints, signed and packaged with care, ship worldwide.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="container split">
+      <div>
+        <h2>Recent highlights</h2>
+        <p>
+          From boutique hotel murals to intimate portrait commissions, we bring
+          story-forward art to every canvas.
+        </p>
+      </div>
+      <ul class="list">
+        <li>City Garden Festival mural series</li>
+        <li>Utopia Press illustrated cover story</li>
+        <li>Atlas &amp; Co. botanical identity kit</li>
+      </ul>
+    </div>
+  </section>
+{% endblock %}

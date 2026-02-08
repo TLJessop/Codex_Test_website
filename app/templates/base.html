@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <title>{% block title %}Studio North{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">◎</span>
+          <span>Studio North</span>
+        </div>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="{{ url_for('main.index') }}">Home</a>
+          <a href="{{ url_for('main.gallery') }}">Gallery</a>
+          <a href="{{ url_for('main.about') }}">About</a>
+          <a href="{{ url_for('main.commissions') }}">Commissions</a>
+        </nav>
+        <button class="mode-toggle" type="button" aria-pressed="false">
+          Dark mode
+        </button>
+      </div>
+    </header>
+    <main id="main" class="site-main">
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        <p>Available for new collaborations. hello@studionorth.com</p>
+      </div>
+    </footer>
+    <script>
+      const toggle = document.querySelector(".mode-toggle");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+      const getStoredTheme = () => localStorage.getItem("theme");
+      const setTheme = (theme) => {
+        document.documentElement.dataset.theme = theme;
+        toggle.setAttribute("aria-pressed", theme === "dark");
+        toggle.textContent = theme === "dark" ? "Light mode" : "Dark mode";
+      };
+      const initTheme = () => {
+        const stored = getStoredTheme();
+        if (stored) {
+          setTheme(stored);
+          return;
+        }
+        setTheme(prefersDark.matches ? "dark" : "light");
+      };
+      toggle?.addEventListener("click", () => {
+        const next =
+          document.documentElement.dataset.theme === "dark"
+            ? "light"
+            : "dark";
+        localStorage.setItem("theme", next);
+        setTheme(next);
+      });
+      initTheme();
+    </script>
+  </body>
+</html>

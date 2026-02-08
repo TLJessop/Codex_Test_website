@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Commission Submissions</title>
+  </head>
+  <body>
+    <header>
+      <h1>Commission Submissions</h1>
+      <nav>
+        <a href="{{ url_for('admin.dashboard') }}">Back to dashboard</a>
+      </nav>
+    </header>
+
+    <section>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Description</th>
+            <th>Deadline</th>
+            <th>Reference</th>
+            <th>Submitted</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for submission in submissions %}
+            <tr>
+              <td>{{ submission.name }}</td>
+              <td>{{ submission.email }}</td>
+              <td>{{ submission.description }}</td>
+              <td>{{ submission.deadline or "N/A" }}</td>
+              <td>{{ submission.reference_image_path or "N/A" }}</td>
+              <td>{{ submission.created_at.strftime("%Y-%m-%d") }}</td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="6">No commission submissions yet.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </body>
+</html>
